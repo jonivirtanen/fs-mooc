@@ -1,0 +1,23 @@
+title SPA submit
+
+kayttaja->selain:
+
+note left of selain
+kayttaja osoitteessa
+fullstack-exampleapp.herokuapp.com/spa,
+klikkaa formin submittaus buttonia
+end note
+note right of selain
+    javascriptissä on määritetty formin submittaukselle preventDefault,
+    jonka jälkeen selain ajaa redrawNotes() funktion, päivittäen listan.
+    sen jälkeen ajetaan funktio sendToServer()
+end note
+
+selain->palvelin: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note left of palvelin
+ palvelin käsittelee pyynnön
+end note
+palvelin->selain: status 201, created
+
+
+

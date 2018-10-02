@@ -1,0 +1,34 @@
+title Muistiinpanojen sekvenssikaavio
+
+kayttaja->selain:
+note left of selain
+kayttaja kirjottaa osoiteriville
+fullstack-exampleapp.herokuapp.com/notes
+end note
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/notes
+note left of palvelin
+ muodostetaan HTML
+end note
+palvelin->selain: status 200, sivun HTML
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.css
+palvelin->selain: status 200, tyylitiedosto
+
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/main.js
+palvelin->selain: status 200, javascript tiedosto
+
+note left of selain
+ selain näyttää sivuston ilman listaa
+end note
+note left of palvelin
+ javascript tiedoston funktio ajetaan
+end note
+
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin->selain: status 200, json data
+
+note left of selain
+ selain näyttää javascriptin muodostamat <ul> ja <li> elementit
+end note
+
+

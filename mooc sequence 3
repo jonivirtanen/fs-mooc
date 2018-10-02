@@ -1,0 +1,38 @@
+title SPA
+
+kayttaja->selain:
+
+note left of selain
+kayttaja osoitteeseen
+fullstack-exampleapp.herokuapp.com/spa
+end note
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/spa
+note left of palvelin
+ palvelin käsittelee pyynnön
+end note
+palvelin->selain: status 200, sivuston HTML
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.css
+palvelin->selain: status 200, tyylitiedosto
+
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/spa.js
+palvelin->selain: status 200, javascript tiedosto
+
+note left of selain
+ selain näyttää sivuston ilman listaa
+end note
+note right of selain
+ javascript tiedosto käsitellään
+end note
+
+selain->palvelin: GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin->selain: status 200, data.json
+
+note left of selain
+ selain ajaa funktion redrawNotes()
+end note
+note left of selain
+ selain näyttää javascriptin muodostamat <ul> ja <li> elementit
+end note
+
+
