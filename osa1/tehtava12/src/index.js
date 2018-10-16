@@ -7,11 +7,16 @@ const Button = ({handleClick, text}) => (
     </div>
 )
 
+const Display = (props) => {
+    return (props.votes === undefined) ?
+    <p>has 0 votes</p> : <p>has {props.votes} votes </p>  
+}
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: 0
+      selected: 0,
+      votes: {}
     }
   }
 
@@ -23,12 +28,25 @@ class App extends React.Component {
     this.setState({selected: random})
   }
 
+  vote = () => {
+    let copy = {...this.state.votes}
+    console.log(this.state.votes)
+    if (!copy[this.state.selected]) {
+        copy[this.state.selected] = 1
+    } else {
+        copy[this.state.selected] += 1
+    }
+    this.setState({votes: copy})
+  }
+
   render() {
     console.log(this.state)
     return (
       <div>
         {this.props.anecdotes[this.state.selected]}
-        <Button handleClick={this.randomise} text="next anecdote"/>    
+        <Display votes={this.state.votes[this.state.selected]}/>
+        <Button handleClick={this.randomise} text="next anecdote"/>
+        <Button handleClick={this.vote} text="vote" />
       </div>
     )
   }
