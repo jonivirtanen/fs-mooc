@@ -2,21 +2,40 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const Button = ({handleClick, text}) => (
-    <div>
-        <button onClick={handleClick}>{text}</button>
-    </div>
+  <button onClick={handleClick}>{text}</button>
 )
 
-const Display = (props) => {
-    return (props.votes === undefined) ?
-    <p>has 0 votes</p> : <p>has {props.votes} votes </p>  
+const DisplayVotes = (props) => {
+  return (props.votes === undefined) ?
+    ( <div></div> ) : ( <p>has {props.votes} votes </p> )  
 }
+
+const DisplayMostVoted = ({votes}) => {
+    console.log(votes)
+    let mostVoted = undefined
+    
+    votes.forEach(function(element, index, array) {
+      if (mostVoted === undefined || votes[mostVoted] < element) {
+        mostVoted = index
+      }
+    });
+
+    console.log(mostVoted)
+    return (
+      <div>
+      <h3>anecdote with most votes:</h3>
+      <p>{anecdotes[mostVoted]}</p>
+      <DisplayVotes votes={votes[mostVoted]}/>
+      </div>
+    )
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       selected: 0,
-      votes: {}
+      votes: Array(anecdotes.length)
     }
   }
 
@@ -29,8 +48,7 @@ class App extends React.Component {
   }
 
   vote = () => {
-    let copy = {...this.state.votes}
-    console.log(this.state.votes)
+    let copy = [...this.state.votes]
     if (!copy[this.state.selected]) {
         copy[this.state.selected] = 1
     } else {
@@ -40,13 +58,15 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         {this.props.anecdotes[this.state.selected]}
-        <Display votes={this.state.votes[this.state.selected]}/>
-        <Button handleClick={this.randomise} text="next anecdote"/>
+        <DisplayVotes votes={this.state.votes[this.state.selected]}/>
+        <div>
         <Button handleClick={this.vote} text="vote" />
+        <Button handleClick={this.randomise} text="next anecdote"/>
+        </div>
+        <DisplayMostVoted votes={this.state.votes} />
       </div>
     )
   }
