@@ -18,12 +18,13 @@ class App extends React.Component {
       const personObject = {
           name: this.state.newName
       }
-
-      const persons = this.state.persons.concat(personObject)
-      this.setState({
+      if(this.state.persons.filter(person => person.name).findIndex(person => person.name === personObject.name) === -1) {
+        const persons = this.state.persons.concat(personObject)
+        this.setState({
           persons: persons,
           newName: ''
-      })
+        })
+      }
   }
 
   handleNameChange = (event) => {
