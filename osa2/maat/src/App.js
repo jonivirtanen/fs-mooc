@@ -10,7 +10,7 @@ const DisplayCountries = (props) => {
   if (countriesToShow.length > 1 && countriesToShow.length <= 10)
     return(
       <ul>
-        {countriesToShow.map(country => <li>{country.name}</li>)}
+        {countriesToShow.map(country => <li key={country.name}>{country.name}</li>)}
       </ul>
     )
   else if (countriesToShow.length === 1) 
@@ -45,7 +45,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div class="container">
+      <div className="container">
         <SearchForm onChange={this.handleFilterChange} />
         <DisplayCountries countries={this.state.countries} filter={this.state.filter}/>
       </div>
