@@ -1,0 +1,8 @@
+div .container {
+    width: 480px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
