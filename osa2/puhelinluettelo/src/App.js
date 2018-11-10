@@ -16,24 +16,28 @@ class App extends React.Component {
   
   componentDidMount() {
     axios.get('http://localhost:3001/persons').then(response => {
+      console.log(response)
       this.setState({persons: response.data})
     })
   }
 
   addPerson = (event) => {
     event.preventDefault()
+    
     const personObject = {
         name: this.state.newName,
-        phone: this.state.newPhone
+        number: this.state.newPhone
     }
+
     if(this.state.persons.findIndex(person => person.name === personObject.name) === -1) {
-      const persons = this.state.persons.concat(personObject)
-      
-      this.setState({
-        persons,
-        newName: '',
-        newPhone: ''
-      })
+      axios.post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          this.setState({
+            persons: this.state.persons.concat(response.data),
+            newName: '',
+            newPhone: ''
+          })
+        })
     }
   }
 
