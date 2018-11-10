@@ -1,7 +1,7 @@
 import React from 'react';
 import Person from './components/Person'
 import Filter from './components/FilterForm'
-import axios from 'axios'
+import personService from './services/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -15,10 +15,12 @@ class App extends React.Component {
   }
   
   componentDidMount() {
-    axios.get('http://localhost:3001/persons').then(response => {
-      console.log(response)
-      this.setState({persons: response.data})
-    })
+    personService
+      .getAll()
+      .then(response => {
+        console.log(response)
+        this.setState({persons: response})
+      })
   }
 
   addPerson = (event) => {
@@ -30,10 +32,11 @@ class App extends React.Component {
     }
 
     if(this.state.persons.findIndex(person => person.name === personObject.name) === -1) {
-      axios.post('http://localhost:3001/persons', personObject)
-        .then(response => {
+      personService
+        .create(personObject)
+        .then(newPerson => {
           this.setState({
-            persons: this.state.persons.concat(response.data),
+            persons: this.state.persons.concat(newPerson),
             newName: '',
             newPhone: ''
           })
