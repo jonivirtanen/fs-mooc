@@ -2,6 +2,7 @@ import React from 'react';
 import Person from './components/Person'
 import Filter from './components/FilterForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +11,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newPhone: '',
-      filter: ''
+      filter: '',
+      notification: null
     }
   }
   
@@ -39,8 +41,10 @@ class App extends React.Component {
           .then(changedPerson => {
             const persons = this.state.persons.filter(p => p.name !== newPerson.name)
             this.setState({
-              persons: persons.concat(changedPerson)
+              persons: persons.concat(changedPerson),
+              notification: `Henkilöä ${changedPerson.name} muokattu`
             })
+            this.resetNoticationState()
           })
       }
     } else {
@@ -50,10 +54,18 @@ class App extends React.Component {
           this.setState({
             persons: this.state.persons.concat(newPerson),
             newName: '',
-            newPhone: ''
+            newPhone: '',
+            notification: `Henkilö ${newPerson.name} lisätty`
           })
+          this.resetNoticationState()
         })
     }
+  }
+
+  resetNoticationState = () => {
+    setTimeout(() => {
+      this.setState({notification: null})
+    }, 5000)
   }
 
   handleSearchChange = (event) => {
@@ -78,8 +90,10 @@ class App extends React.Component {
           .then(() => {
             const persons = this.state.persons.filter(p => p.id !== id)
             this.setState({
-              persons
+              persons,
+              notification: `Henkilö ${person.name} poistettu`
             })
+            this.resetNoticationState()
           })
       }
     }  
@@ -94,6 +108,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <Notification message={this.state.notification} />
         <Filter searchHandle={this.handleSearchChange} />
         <h2>Lisää uusi</h2>
         <form onSubmit={this.addPerson}>
