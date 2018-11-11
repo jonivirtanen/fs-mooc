@@ -25,14 +25,27 @@ class App extends React.Component {
   addPerson = (event) => {
     event.preventDefault()
     
-    const personObject = {
+    const newPerson = {
         name: this.state.newName,
         number: this.state.newPhone
     }
 
-    if(this.state.persons.findIndex(person => person.name === personObject.name) === -1) {
+    const person = this.state.persons.find(p => p.name === newPerson.name)
+
+    if(person !== undefined) {
+      if (window.confirm(`${person.name} on jo luettelossa, korvataanko vanha numero uudella?`)) {
+        personService
+          .update(person.id, newPerson)
+          .then(changedPerson => {
+            const persons = this.state.persons.filter(p => p.name !== newPerson.name)
+            this.setState({
+              persons: persons.concat(changedPerson)
+            })
+          })
+      }
+    } else {
       personService
-        .create(personObject)
+        .create(newPerson)
         .then(newPerson => {
           this.setState({
             persons: this.state.persons.concat(newPerson),
