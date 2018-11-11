@@ -18,7 +18,6 @@ class App extends React.Component {
     personService
       .getAll()
       .then(response => {
-        console.log(response)
         this.setState({persons: response})
       })
   }
@@ -45,7 +44,7 @@ class App extends React.Component {
   }
 
   handleSearchChange = (event) => {
-      this.setState({filter: event.target.value})
+    this.setState({filter: event.target.value})
   }
 
   handleNameChange = (event) => {
@@ -53,7 +52,24 @@ class App extends React.Component {
   }
 
   handleNumberChange = (event) => {
-      this.setState({newPhone: event.target.value})
+    this.setState({newPhone: event.target.value})
+  }
+
+  handlePersonRemoval = (id) => {
+    return () => {
+      const person = this.state.persons.find(p => p.id === id)
+
+      if (window.confirm(`Poistetaanko ${person.name}?`)) {
+        personService
+          .remove(id)
+          .then(() => {
+            const persons = this.state.persons.filter(p => p.id !== id)
+            this.setState({
+              persons
+            })
+          })
+      }
+    }  
   }
 
   render() {
@@ -81,7 +97,13 @@ class App extends React.Component {
         <h2>Numerot</h2>
         <table>
           <tbody>
-            {applyFilter.map(person => <Person key={person.name} person={person} />)}
+            {applyFilter.map(person => 
+              <Person 
+                key={person.name} 
+                person={person} 
+                deleteHandler={this.handlePersonRemoval(person.id)} 
+              />
+            )}
           </tbody>
         </table>
       </div>
