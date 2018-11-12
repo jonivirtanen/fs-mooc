@@ -12,7 +12,8 @@ class App extends React.Component {
       newName: '',
       newPhone: '',
       filter: '',
-      notification: null
+      notification: null,
+      error: false
     }
   }
   
@@ -64,7 +65,10 @@ class App extends React.Component {
 
   resetNoticationState = () => {
     setTimeout(() => {
-      this.setState({notification: null})
+      this.setState({
+        notification: null,
+        error: false
+      })
     }, 5000)
   }
 
@@ -93,8 +97,15 @@ class App extends React.Component {
               persons,
               notification: `Henkilö ${person.name} poistettu`
             })
-            this.resetNoticationState()
           })
+          .catch(error => {
+            this.setState({
+              persons: this.state.persons.filter(p => p.name !== person.name),
+              notification: `Henkilöä ${person.name} ei ole`,
+              error: true
+            })
+          })
+          this.resetNoticationState()          
       }
     }  
   }
@@ -108,7 +119,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <Notification message={this.state.notification} />
+        <Notification message={this.state.notification} error={this.state.error} />
         <Filter searchHandle={this.handleSearchChange} />
         <h2>Lisää uusi</h2>
         <form onSubmit={this.addPerson}>

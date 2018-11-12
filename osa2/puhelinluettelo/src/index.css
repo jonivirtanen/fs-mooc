@@ -13,13 +13,22 @@ code {
     monospace;
 }
 
-.notification {
+.messagebox {
   color: black;
-  background: green;
   font-size: 20px;
   border-style: solid;
   border-radius: 3px;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.error {
+  background: red;
   max-width: 25%;
 }
+
+.notification {
+  background: green;
+  max-width: 25%;
+}
+
