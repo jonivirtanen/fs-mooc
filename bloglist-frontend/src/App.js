@@ -12,7 +12,8 @@ class App extends React.Component {
       blogs: [],
       username: '',
       password: '',
-      error: null,
+      notification: null,
+      notificationType: 0,
       user: null
     }
     
@@ -46,10 +47,11 @@ class App extends React.Component {
       this.setState({ username: '', password: '', user })
     } catch (exception) {
       this.setState({
-        error: 'Username or password invalid'
+        notification: 'Username or password invalid',
+        notificationType: 1
       })
       setTimeout(() => {
-        this.setState({ error: null })
+        this.setState({ notification: null, notificationType: 0 })
       }, 5000)
     }
   }
@@ -63,8 +65,12 @@ class App extends React.Component {
 
   handleCreateNewBlog = (blog) => {
     this.setState({
-      blogs: this.state.blogs.concat(blog)
+      blogs: this.state.blogs.concat(blog),
+      notification: `New blog '${ blog.title }' by ${ blog.author } added`
     })
+    setTimeout(() => {
+      this.setState({ notification: null })
+    }, 5000)
   }
 
   handleLoginFieldChange = (event) => {
@@ -111,7 +117,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification notification = { this.state.error } />
+        <Notification notificationType={ this.state.notificationType } notification = { this.state.notification } />
         { this.state.user === null ? loginForm() :
           <div> 
             <p>{ this.state.user.name } logged in <button onClick={this.handleLogout}> logout </button></p>

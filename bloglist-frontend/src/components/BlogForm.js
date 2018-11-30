@@ -9,7 +9,6 @@ class BlogForm extends React.Component {
       author: '',
       url: ''
     }
-    console.log(this.props)
   }
 
   handleBlogFieldChange = (event) => {
