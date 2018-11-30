@@ -17,7 +17,6 @@ class BlogForm extends React.Component {
 
   handleBlogSubmit = async (event) => {
     event.preventDefault()
-    
     try{
       const blog = await blogService.create({
         title: this.state.title,

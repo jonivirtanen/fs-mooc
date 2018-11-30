@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from './components/Togglable';
 
 class App extends React.Component {
   constructor(props) {
@@ -71,6 +72,7 @@ class App extends React.Component {
     setTimeout(() => {
       this.setState({ notification: null })
     }, 5000)
+    this.blogForm.toggleVisibility()
   }
 
   handleLoginFieldChange = (event) => {
@@ -121,7 +123,9 @@ class App extends React.Component {
         { this.state.user === null ? loginForm() :
           <div> 
             <p>{ this.state.user.name } logged in <button onClick={this.handleLogout}> logout </button></p>
-            <BlogForm handleCreateNewBlog={this.handleCreateNewBlog}/>
+            <Togglable buttonLabel="New Blog" ref={ component => this.blogForm = component }>
+              <BlogForm handleCreateNewBlog={this.handleCreateNewBlog}/>
+            </Togglable>
             { blogList() }
           </div> }
       </div>
