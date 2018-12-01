@@ -4,16 +4,29 @@ class Blog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showAll: false
+      showAll: false,
+      removable: this.props.blog.user._id === 1
     }
+
+    this.handleRemove = this.handleRemove.bind(this)
   }
 
   toggleMode = () => {
     this.setState({ showAll: !this.state.showAll })
   }
 
+  updateBlogLikes = () => {
+    const blog = this.props.blog
+    blog.likes += 1
+    this.props.handleUpdate(blog)
+  }
+
+  handleRemove = () => {
+    this.props.handleRemove(this.props.blog.id)
+  }
+
   render() {
-    const individualBlog = this.props.blog 
+    const blog = this.props.blog 
     const blogStyle = {
       paddingTop: 10,
       paddingLeft: 2,
@@ -21,17 +34,18 @@ class Blog extends React.Component {
       borderWidth: 1,
       marginBottom: 5
     }
-
+    
     return (
       this.state.showAll ? 
         <div style={ blogStyle } onClick={ this.toggleMode }>
-          <h3>{ individualBlog.title } - { individualBlog.author }</h3>
-          <a href={ individualBlog.url }>  { individualBlog.url } </a>
-          <div>{ individualBlog.likes } <button> Like </button></div>
-          <div>added by { individualBlog.user.name }</div>
+          <h3>{ blog.title } - { blog.author }</h3>
+          <a href={ blog.url }>  { blog.url } </a>
+          <div>{ blog.likes } <button onClick={ this.updateBlogLikes }> Like </button></div>
+          <div>added by { blog.user.name }</div>
+          <button onClick={ this.handleRemove }>Delete</button>
         </div> :
         <div style={ blogStyle } onClick={ this.toggleMode }>
-          <h3>{ individualBlog.title } - { individualBlog.author }</h3>
+          <h3>{ blog.title } - { blog.author }</h3>
         </div>
     )
   }

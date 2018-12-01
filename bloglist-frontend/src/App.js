@@ -22,9 +22,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      blogs.sort(function (a, b){
+        return b.likes - a.likes
+      })
+
       this.setState({ blogs })
-    )
+    })
 
     const loggedBlogAppUserJson = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedBlogAppUserJson) {
@@ -42,7 +46,6 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       })
-      console.log(user)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       this.setState({ username: '', password: '', user })
@@ -64,15 +67,58 @@ class App extends React.Component {
     this.setState({ user: null })
   }
 
-  handleCreateNewBlog = (blog) => {
-    this.setState({
-      blogs: this.state.blogs.concat(blog),
-      notification: `New blog '${ blog.title }' by ${ blog.author } added`
-    })
-    setTimeout(() => {
-      this.setState({ notification: null })
-    }, 5000)
-    this.blogForm.toggleVisibility()
+  handleCreateNewBlog = async (blog) => {
+    try {
+      const response = await blogService
+        .create(blog)
+
+      console.log(response)
+      this.setState({
+        blogs: this.state.blogs.concat(response),
+        notification: `New blog '${ response.title }' by ${ response.author } added`
+      })
+      setTimeout(() => {
+        this.setState({ notification: null })
+      }, 5000)
+    } catch (exception) {
+      this.setState({ 
+        notificationType: 1,
+        notification: exception.message
+      })
+      setTimeout(() => {
+        this.setState({ notificationType: 0, notification: null })
+      }, 5000)
+    }
+  }
+
+  handleUpdateBlog = async (blog) => {
+    const res = await blogService.update(blog.id, blog)
+  }
+
+  handleRemoveBlog = async (id) => {
+    const blog = this.state.blogs.find(b => b.id === id)
+    console.log(id)
+
+    if (window.confirm(`delete '${blog.title}' by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id)
+        const blogs = this.state.blogs.filter(b => b.id !== blog.id)
+        this.setState({
+          blogs,
+          notification: `Blog ${blog.title} was removed`
+        })
+        setTimeout(() => {
+          this.setState({notification: null})
+        }, 5000)
+      } catch (exception) {
+        this.setState({
+          notificationType: 1, notification: exception.message
+        })
+        setTimeout(() => {
+          this.setState({ notification: null })
+        }, 5000)
+      }
+    } 
   }
 
   handleLoginFieldChange = (event) => {
@@ -84,14 +130,14 @@ class App extends React.Component {
       <div>
         <h2>Login</h2>
     
-        <form onSubmit={this.login}>
+        <form onSubmit={ this.login }>
           <div>
             username
             <input
               type="text"
               name="username"
-              value={this.state.username}
-              onChange={this.handleLoginFieldChange}
+              value={ this.state.username }
+              onChange={ this.handleLoginFieldChange }
             />
           </div>
           <div>
@@ -99,8 +145,8 @@ class App extends React.Component {
             <input
               type="password"
               name="password"
-              value={this.state.password}
-              onChange={this.handleLoginFieldChange}
+              value={ this.state.password }
+              onChange={ this.handleLoginFieldChange }
             />
           </div>
           <button type="submit">login</button>
@@ -111,7 +157,12 @@ class App extends React.Component {
     const blogList = () => {
       return (
         this.state.blogs.map(blog => 
-          <Blog key={blog.id} blog={blog}/>
+          <Blog 
+            key={ blog.id }
+            blog={ blog }
+            handleUpdate={ this.handleUpdateBlog }
+            handleRemove={ this.handleRemoveBlog }
+          />
         )
       )
     }
@@ -120,11 +171,14 @@ class App extends React.Component {
       <div>
         <h2>blogs</h2>
         <Notification notificationType={ this.state.notificationType } notification = { this.state.notification } />
-        { this.state.user === null ? loginForm() :
+        { this.state.user === null ? 
+        <Togglable buttonLabel="Login">
+          { loginForm() }
+        </Togglable> :
           <div> 
-            <p>{ this.state.user.name } logged in <button onClick={this.handleLogout}> logout </button></p>
+            <p>{ this.state.user.name } logged in <button onClick={ this.handleLogout }> logout </button></p>
             <Togglable buttonLabel="New Blog" ref={ component => this.blogForm = component }>
-              <BlogForm handleCreateNewBlog={this.handleCreateNewBlog}/>
+              <BlogForm handleCreateNewBlog={ this.handleCreateNewBlog } />
             </Togglable>
             { blogList() }
           </div> }

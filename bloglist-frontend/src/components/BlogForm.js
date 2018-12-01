@@ -1,5 +1,4 @@
 import React from 'react'
-import blogService from '../services/blogs'
 
 class BlogForm extends React.Component {
   constructor(props) {
@@ -15,25 +14,17 @@ class BlogForm extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleBlogSubmit = async (event) => {
+  handleBlogSubmit = (event) => {
     event.preventDefault()
-    try{
-      const blog = await blogService.create({
-        title: this.state.title,
-        author: this.state.author,
-        url: this.state.url
-      })
 
-      this.setState({ title: '', author: '', url: '' })
-      this.props.handleCreateNewBlog(blog)      
-    } catch (exception) {
-      this.setState({
-        error: 'Something went wrong'
-      })
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)
+    const blog = {
+      title: this.state.title,
+      author: this.state.author,
+      url: this.state.url
     }
+
+    this.setState({ title: '', author: '', url: '' })
+    this.props.handleCreateNewBlog(blog)
   }
 
   render() {
