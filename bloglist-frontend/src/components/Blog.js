@@ -5,10 +5,7 @@ class Blog extends React.Component {
     super(props)
     this.state = {
       showAll: false,
-      removable: this.props.blog.user._id === 1
     }
-
-    this.handleRemove = this.handleRemove.bind(this)
   }
 
   toggleMode = () => {
@@ -37,14 +34,14 @@ class Blog extends React.Component {
     
     return (
       this.state.showAll ? 
-        <div style={ blogStyle } onClick={ this.toggleMode }>
+        <div className="details" style={ blogStyle } onClick={ this.toggleMode }>
           <h3>{ blog.title } - { blog.author }</h3>
           <a href={ blog.url }>  { blog.url } </a>
           <div>{ blog.likes } <button onClick={ this.updateBlogLikes }> Like </button></div>
           <div>added by { blog.user.name }</div>
           <button onClick={ this.handleRemove }>Delete</button>
         </div> :
-        <div style={ blogStyle } onClick={ this.toggleMode }>
+        <div className="titleAndAuthor" style={ blogStyle } onClick={ this.toggleMode }>
           <h3>{ blog.title } - { blog.author }</h3>
         </div>
     )

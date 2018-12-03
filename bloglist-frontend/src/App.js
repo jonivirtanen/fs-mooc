@@ -5,6 +5,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable';
+import LoginForm from './components/Login';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,8 +18,6 @@ class App extends React.Component {
       notificationType: 0,
       user: null
     }
-    
-    this.handleCreateNewBlog = this.handleCreateNewBlog.bind(this)
   }
 
   componentDidMount() {
@@ -92,7 +91,7 @@ class App extends React.Component {
   }
 
   handleUpdateBlog = async (blog) => {
-    const res = await blogService.update(blog.id, blog)
+    await blogService.update(blog.id, blog)
   }
 
   handleRemoveBlog = async (id) => {
@@ -126,34 +125,6 @@ class App extends React.Component {
   }
 
   render() {
-    const loginForm = () => (
-      <div>
-        <h2>Login</h2>
-    
-        <form onSubmit={ this.login }>
-          <div>
-            username
-            <input
-              type="text"
-              name="username"
-              value={ this.state.username }
-              onChange={ this.handleLoginFieldChange }
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              name="password"
-              value={ this.state.password }
-              onChange={ this.handleLoginFieldChange }
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
-
     const blogList = () => {
       return (
         this.state.blogs.map(blog => 
@@ -173,7 +144,12 @@ class App extends React.Component {
         <Notification notificationType={ this.state.notificationType } notification = { this.state.notification } />
         { this.state.user === null ? 
         <Togglable buttonLabel="Login">
-          { loginForm() }
+          <LoginForm 
+            login = { this.login }
+            username = { this.state.username }
+            password = { this.state.password }
+            handleLoginFieldChange = { this.handleLoginFieldChange }
+          />
         </Togglable> :
           <div> 
             <p>{ this.state.user.name } logged in <button onClick={ this.handleLogout }> logout </button></p>
