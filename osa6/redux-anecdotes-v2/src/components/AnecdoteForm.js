@@ -9,8 +9,7 @@ class AnecdoteForm extends React.Component {
     const content = e.target.anecdote.value
 
     e.target.anecdote.value = ''
-    const newAnecdote = await noteService.create(content)
-    this.props.createAnecdote(newAnecdote)
+    this.props.createAnecdote(content)
   }
   render() {
     return (

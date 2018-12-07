@@ -3,7 +3,7 @@ const initialState = 'render here notification...'
 const reducer = (store = initialState, action) => {
   switch (action.type) {
   case 'SET_NOTIFICATION':
-    return action.notification
+    return action.data
 
   case 'REMOVE_NOTIFICATION':
     return ''
@@ -14,8 +14,16 @@ const reducer = (store = initialState, action) => {
 
 }
 
-export const setNotification = (notification) => {
-  return { type: 'SET_NOTIFICATION', notification }
+export const setNotification = (notification, time) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      data: notification
+    })
+    setTimeout(() => {
+      dispatch({ type: 'REMOVE_NOTIFICATION'})
+    }, time * 1000)
+  }
 }
 
 export const removeNotification = () => {
