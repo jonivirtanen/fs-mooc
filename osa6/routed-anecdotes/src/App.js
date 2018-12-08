@@ -1,17 +1,37 @@
 import React from 'react'
 import {
   BrowserRouter as Router,
-  Route, Link
+  Route, NavLink, Link
 } from 'react-router-dom'
 
-const Menu = () => (
-  <div>    
-    <Link to="/">anecdotes</Link>&nbsp;
-    <Link to="/new">create new</Link>&nbsp;
-    <Link to="/about">about</Link>&nbsp;
-  </div>
-)
+const Menu = () => {
+  const basestyle = {
+    margin: '5px',
+    backgroundColor: '#d3ad02',
+    overflow: 'hidden'
+  }
 
+  const buttonStyle= {
+    float: 'left',
+    textAlign: 'center',
+    padding: '14px 16px',
+    fontSize: '17px',
+  }
+
+  const activeStyle = {
+    backgroundColor: '#91d302',
+    fontWeight: 'bold',
+    color: 'red',
+  }
+  
+  return (
+    <div style={basestyle}>
+      <NavLink exact to="/" style={buttonStyle} activeStyle={activeStyle}>anecdotes</NavLink>&nbsp;
+      <NavLink to="/new" style={buttonStyle} activeStyle={activeStyle}>create new</NavLink>&nbsp;
+      <NavLink to="/about" style={buttonStyle} activeStyle={activeStyle}>about</NavLink>&nbsp;
+    </div>
+  )
+}
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
@@ -21,11 +41,19 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-const Notification = ({notification}) => (
-  <div>
-    {notification}
-  </div>
-)    
+const Notification = ({notification}) => {
+  const style = {
+    border: '1px solid black',
+    borderRadius: '5px',
+    padding: '10px',
+    margin: '5px',
+  }
+  return (
+    <div style={style}>
+      {notification}
+    </div>
+  )
+}    
 
 
 const About = () => (
@@ -124,7 +152,7 @@ class App extends React.Component {
           id: '2'
         }
       ],
-      notification: ''
+      notification: 'Hei vain'
     } 
   }
 
@@ -202,4 +230,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default App
