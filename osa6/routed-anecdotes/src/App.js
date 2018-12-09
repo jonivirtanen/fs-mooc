@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Route, NavLink, Link
 } from 'react-router-dom'
+import { Container, Table, Grid, Image } from 'semantic-ui-react'
 
 const Menu = () => {
   const basestyle = {
@@ -35,9 +36,16 @@ const Menu = () => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} ><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link></li>)}
-    </ul>  
+    <Table>
+      <Table.Body>
+      {anecdotes.map(anecdote =>
+        <Table.Row>
+          <Table.Cell>
+            <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+          </Table.Cell>
+        </Table.Row>)}
+      </Table.Body>
+    </Table>
   </div>
 )
 
@@ -57,8 +65,8 @@ const Notification = ({notification}) => {
 
 
 const About = () => (
-  <div>
-    <h2>About anecdote app</h2>
+  <Grid columns={2}>
+    <Grid.Column width={10}><h2>About anecdote app</h2>
     <p>According to Wikipedia:</p>
     
     <em>An anecdote is a brief, revealing account of an individual person or an incident. 
@@ -67,7 +75,11 @@ const About = () => (
       An anecdote is "a story with a point."</em>
 
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
-  </div>
+    </Grid.Column>
+    <Grid.Column width={6}>
+      <Image src='https://upload.wikimedia.org/wikipedia/commons/0/0e/Bjarne-stroustrup_%28cropped%29.jpg'/>
+    </Grid.Column>
+  </Grid>
 )
 
 
@@ -187,7 +199,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <Container>
         <Router>
           <div>
             <h1>Software anecdotes</h1>
@@ -216,7 +228,7 @@ class App extends React.Component {
               />
               <Route
                 path="/about/"
-                render={() => <About /> } 
+                render={() => <About /> } 
               />      
               <Route
                 path="/new"
@@ -225,7 +237,7 @@ class App extends React.Component {
             <Footer />
           </div>
         </Router>
-      </div>
+      </Container>
     );
   }
 }
