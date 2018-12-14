@@ -1,5 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { createBlog } from '../reducers/blogReducer'
 
 class BlogForm extends React.Component {
   constructor(props) {
@@ -18,14 +20,19 @@ class BlogForm extends React.Component {
   handleBlogSubmit = (event) => {
     event.preventDefault()
 
-    const blog = {
-      title: this.state.title,
-      author: this.state.author,
-      url: this.state.url
+    try {
+      const blog = {
+        title: this.state.title,
+        author: this.state.author,
+        url: this.state.url
+      }
+      
+      this.props.createBlog(blog)
+      this.props.setNotification(`New blog with a name ${blog.title} by ${blog.author} was created`, 0, 5)
+      this.setState({ title: '', author: '', url: '' })    
+    } catch (exception) {
+      console.log(exception)
     }
-
-    this.setState({ title: '', author: '', url: '' })
-    this.props.handleCreateNewBlog(blog)
   }
 
   render() {
@@ -67,8 +74,7 @@ class BlogForm extends React.Component {
   }
 }
 
-BlogForm.propTypes = {
-  handleCreateNewBlog: PropTypes.func.isRequired
-}
-
-export default BlogForm
+export default connect(
+  null,
+  { setNotification, createBlog }
+  )(BlogForm)

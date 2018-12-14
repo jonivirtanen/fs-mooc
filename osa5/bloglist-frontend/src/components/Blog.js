@@ -1,57 +1,52 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { voteBlog, removeBlog } from '../reducers/blogReducer'
+import { bindActionCreators } from 'redux';
+import { Card } from 'semantic-ui-react';
 
 class Blog extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      showAll: false,
-    }
-  }
-
-  toggleMode = () => {
-    this.setState({ showAll: !this.state.showAll })
-  }
-
-  updateBlogLikes = () => {
-    const blog = this.props.blog
-    blog.likes += 1
-    this.props.handleUpdate(blog)
-  }
-
-  handleRemove = () => {
-    this.props.handleRemove(this.props.blog.id)
+  handleRemoval = () => {
+    this.props.removeBlog()
+    this.props.history.push('/')
   }
 
   render() {
-    const blog = this.props.blog 
-    const blogStyle = {
-      paddingTop: 10,
-      paddingLeft: 2,
-      border: 'solid',
-      borderWidth: 1,
-      marginBottom: 5
+    const { blog } = this.props 
+    if (blog) {
+      return (
+        <Card> 
+        <Card.Content>
+          <Card.Header>{ blog.title } - { blog.author }</Card.Header>
+          <Card.Meta><a href={ blog.url }>  Link to blog </a></Card.Meta>
+          <Card.Description>{ blog.likes } <button onClick={ this.props.voteBlog }> Like </button></Card.Description>
+          <Card.Description>added by { blog.user.name }</Card.Description>
+          <Card.Description><button onClick={ this.handleRemoval }>Delete</button></Card.Description>
+        </Card.Content> 
+        </Card>
+      )
     }
-    
-    return (
-      this.state.showAll ? 
-        <div className="details" style={ blogStyle } onClick={ this.toggleMode }>
-          <h3>{ blog.title } - { blog.author }</h3>
-          <a href={ blog.url }>  { blog.url } </a>
-          <div>{ blog.likes } <button onClick={ this.updateBlogLikes }> Like </button></div>
-          <div>added by { blog.user.name }</div>
-          <button onClick={ this.handleRemove }>Delete</button>
-        </div> :
-        <div className="titleAndAuthor" style={ blogStyle } onClick={ this.toggleMode }>
-          <h3>{ blog.title } - { blog.author }</h3>
-        </div>
-    )
+    return null
   }
 }
 
-export default Blog
+const mapStateToProps = (state, props) => {
+  if (state.blogs.length === 0) {
+    return { }
+  }
+  
+  const blog = state.blogs.filter(b => 
+    b.id === props.blogid)
+  
+  return { blog: blog[0] }
+}
 
-// const Blog = ({blog}) => (
-//   <div>
-//     {blog.title} {blog.author}
-//   </div>  
-// )
+const mapDispatchToProps = (dispatch, props) => 
+  bindActionCreators({
+  voteBlog: () => voteBlog(props.blogid),
+  removeBlog: () => removeBlog(props.blogid)
+  }, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Blog)
