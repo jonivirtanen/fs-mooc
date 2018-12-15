@@ -49,43 +49,43 @@ class App extends React.Component {
       <Container>
         <Router>
           <div>
-          <h2>blogs</h2>
-          <NavBar user={this.state.user} handleLogout={this.handleLogout}/>
-          <Notification />
-          { this.state.user === null ? 
-          <Route 
-            exact path='/login'
-            render={({history}) => 
-            <Togglable buttonLabel="Login">
-              <LoginForm 
-                history={history}
-                onLogin={this.login}
-              />
-            </Togglable>
-            }
-          />
-           :
-            <div> 
-              <Togglable buttonLabel="New Blog" ref={ component => this.blogForm = component }>
-                <BlogForm />
-              </Togglable>
+            <h2>blogs</h2>
+            <NavBar user={this.state.user} handleLogout={this.handleLogout}/>
+            <Notification />
+            { this.state.user === null ? 
               <Route 
-                exact path='/users'
-                render={() => <UserList /> }
+                exact path='/login'
+                render={({history}) => 
+                  <Togglable buttonLabel="Login">
+                    <LoginForm 
+                      history={history}
+                      onLogin={this.login}
+                    />
+                  </Togglable>
+                }
               />
-              <Route 
-                exact path='/users/:id'
-                render={({match}) => <User uid={match.params.id} />}
-              />
-              <Route
-                exact path='/'
-                render={() => <BlogList />}
-              />
-              <Route
-                exact path='/blogs/:id'
-                render={({match, history}) => <Blog blogid={match.params.id} history={history}/>}
-              />
-            </div> }
+              :
+              <div> 
+                <Togglable buttonLabel="New Blog" ref={ component => this.blogForm = component }>
+                  <BlogForm />
+                </Togglable>
+                <Route 
+                  exact path='/users'
+                  render={() => <UserList /> }
+                />
+                <Route 
+                  exact path='/users/:id'
+                  render={({match}) => <User uid={match.params.id} />}
+                />
+                <Route
+                  exact path='/'
+                  render={() => <BlogList />}
+                />
+                <Route
+                  exact path='/blogs/:id'
+                  render={({match, history}) => <Blog blogid={match.params.id} history={history}/>}
+                />
+              </div> }
           </div>
         </Router>
       </Container>

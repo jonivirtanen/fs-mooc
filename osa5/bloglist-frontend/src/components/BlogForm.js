@@ -31,7 +31,7 @@ class BlogForm extends React.Component {
       this.props.setNotification(`New blog with a name ${blog.title} by ${blog.author} was created`, 0, 5)
       this.setState({ title: '', author: '', url: '' })    
     } catch (exception) {
-      console.log(exception)
+      this.props.setNotification('Something went wrong', 1, 5)
     }
   }
 
@@ -77,4 +77,4 @@ class BlogForm extends React.Component {
 export default connect(
   null,
   { setNotification, createBlog }
-  )(BlogForm)
+)(BlogForm)
